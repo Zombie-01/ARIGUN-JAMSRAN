@@ -1,0 +1,3 @@
+# Internal phase reports and audits: kept locally, never published.
+/docs/
+__pycache__/

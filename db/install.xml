@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<XMLDB PATH="local/extsync/db" VERSION="20260918" COMMENT="XMLDB file for Moodle local/extsync"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:noNamespaceSchemaLocation="../../../lib/xmldb/xmldb.xsd"
+>
+  <TABLES>
+    <TABLE NAME="local_extsync_integration" COMMENT="External integrations allowed to own objects in this site. One row per web service account: the integration is resolved from the authenticated user and is never supplied by the caller.">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
+        <FIELD NAME="userid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="Web service account this integration acts as"/>
+        <FIELD NAME="integrationkey" TYPE="char" LENGTH="100" NOTNULL="true" SEQUENCE="false" COMMENT="Stable identifier of the integration, shown to administrators"/>
+        <FIELD NAME="timecreated" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false"/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+        <KEY NAME="userid" TYPE="foreign-unique" FIELDS="userid" REFTABLE="user" REFFIELDS="id"/>
+      </KEYS>
+      <INDEXES>
+        <INDEX NAME="integrationkey" UNIQUE="true" FIELDS="integrationkey"/>
+      </INDEXES>
+    </TABLE>
+    <TABLE NAME="local_extsync_module" COMMENT="Course modules created by External Sync. Only these can be updated, moved or deleted through the web service, and only by the integration that created them.">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
+        <FIELD NAME="cmid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="Course module created by the plugin"/>
+        <FIELD NAME="courseid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="Course the module was created in"/>
+        <FIELD NAME="modname" TYPE="char" LENGTH="20" NOTNULL="true" SEQUENCE="false" COMMENT="Module type at creation time"/>
+        <FIELD NAME="integrationid" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false" COMMENT="Integration that created the module. NULL means ownership could not be proven, and the module is never changed or deleted through the web service."/>
+        <FIELD NAME="timecreated" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false"/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+        <KEY NAME="cmid" TYPE="foreign-unique" FIELDS="cmid" REFTABLE="course_modules" REFFIELDS="id"/>
+        <KEY NAME="courseid" TYPE="foreign" FIELDS="courseid" REFTABLE="course" REFFIELDS="id"/>
+        <KEY NAME="integrationid" TYPE="foreign" FIELDS="integrationid" REFTABLE="local_extsync_integration" REFFIELDS="id"/>
+      </KEYS>
+    </TABLE>
+    <TABLE NAME="local_extsync_question" COMMENT="Questions imported by External Sync into a quiz. Replacing an exam's questions only deletes these.">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
+        <FIELD NAME="questionid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="Question created by the plugin's import"/>
+        <FIELD NAME="cmid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="Quiz the question was imported for"/>
+        <FIELD NAME="ref" TYPE="char" LENGTH="100" NOTNULL="false" SEQUENCE="false" COMMENT="The external system's reference for the question: its ID number in the imported document, kept even when Moodle could not store it"/>
+        <FIELD NAME="integrationid" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false" COMMENT="Integration that imported the question. NULL means ownership could not be proven, and the question is never deleted through the web service."/>
+        <FIELD NAME="timecreated" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false"/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+        <KEY NAME="questionid" TYPE="foreign-unique" FIELDS="questionid" REFTABLE="question" REFFIELDS="id"/>
+        <KEY NAME="cmid" TYPE="foreign" FIELDS="cmid" REFTABLE="course_modules" REFFIELDS="id"/>
+        <KEY NAME="integrationid" TYPE="foreign" FIELDS="integrationid" REFTABLE="local_extsync_integration" REFFIELDS="id"/>
+      </KEYS>
+    </TABLE>
+    <TABLE NAME="local_extsync_sync" COMMENT="Student synchronisations of recent days, so that removals are limited over a period rather than per request.">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
+        <FIELD NAME="courseid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="Course synchronised"/>
+        <FIELD NAME="students" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false" COMMENT="Students enrolled with the manual enrolment role before this synchronisation"/>
+        <FIELD NAME="removed" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false" COMMENT="Students this synchronisation removed"/>
+        <FIELD NAME="timecreated" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false"/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+        <KEY NAME="courseid" TYPE="foreign" FIELDS="courseid" REFTABLE="course" REFFIELDS="id"/>
+      </KEYS>
+    </TABLE>
+  </TABLES>
+</XMLDB>

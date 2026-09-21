@@ -1,0 +1,8 @@
+* text=auto eol=lf
+
+# Development-only files stay out of release archives (git archive).
+/.github export-ignore
+/docs export-ignore
+/.gitattributes export-ignore
+/integrations export-ignore
+/.gitignore export-ignore
