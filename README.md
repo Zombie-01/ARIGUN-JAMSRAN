@@ -327,8 +327,19 @@ and create course content. Retention and processing in the external system are g
 
 ## Support
 
-* Issue tracker and source code: published with the plugin's Moodle Marketplace listing.
-* Report security issues privately to the maintainers rather than in the public issue tracker.
+**Developers** can use the plugin directly: this README documents every function, setting and capability, and
+[`integrations/`](integrations/) has a ready-made Python client, a Claude skill and GPT/Gemini tool definitions.
+Bugs and feature requests: [GitHub Issues](https://github.com/Zombie-01/ARIGUN-JAMSRAN/issues).
+
+**Schools and organisations without a developer** can get help with installation, web service setup, connecting
+an existing system (student information system, content platform, spreadsheets) or setting up AI assistants to
+publish lessons and quizzes. Contact **mm6816557@gmail.com** — in English or Mongolian.
+
+**Тусламж хэрэгтэй бол:** суулгах, web service тохируулах, танай системийг Moodle-той холбох, эсвэл AI туслахаар
+хичээл, шалгалт оруулах тохиргоо хийлгэхийг хүсвэл **mm6816557@gmail.com** хаягаар монгол эсвэл англи хэлээр
+холбогдоорой.
+
+Report security issues privately to the address above rather than in the public issue tracker.
 
 ## Licence
 
