@@ -122,6 +122,21 @@ The repository's [`integrations/`](integrations/) folder (not part of the plugin
 that calls all four functions from JSON, a Claude skill, and tool definitions for Claude, OpenAI and Gemini, so a
 script or an AI assistant can push lessons and exams with only the site URL and a token.
 
+### Try it in five minutes
+
+The plugin has no user interface of its own; you see it working in a course. After the setup above:
+
+```
+set EXTSYNC_URL=https://moodle.example.com
+set EXTSYNC_TOKEN=YOUR_TOKEN
+echo {"courseid": 2, "name": "Demo lesson", "pages": [{"key": "intro", "name": "Welcome", "html": "Hello"}]} > lesson.json
+python integrations/extsync/extsync.py push_lesson lesson.json
+```
+
+Course 2 now has a section *Demo lesson* with an assignment and a page *Welcome*. Run the same command again with
+the returned `sectionid` and `assigncmid` added to the JSON and the same activities are updated rather than
+copied. `python integrations/extsync/extsync.py --tools claude` lists every parameter of the four functions.
+
 ## Required capabilities
 
 Every function checks the same capabilities Moodle's own interface requires for the same action, in the same

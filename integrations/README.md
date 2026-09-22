@@ -16,7 +16,7 @@ it on the **External Sync push** service. Then hand over the site URL and the to
 
 ```
 set EXTSYNC_URL=https://moodle.example.edu
-set EXTSYNC_TOKEN=<token>
+set EXTSYNC_TOKEN=YOUR_TOKEN
 python extsync/extsync.py push_exam exam.json
 python extsync/extsync.py fetch_grades grades.json
 ```
