@@ -30,8 +30,8 @@ defined('MOODLE_INTERNAL') || die();
 $plugin->component = 'local_extsync';
 // A renamed component has no upgrade lineage: Moodle installs this as a new plugin and the
 // version integer necessarily restarts. The release string carries the continuity instead.
-$plugin->version = 2026091800;
+$plugin->version = 2026101200;
 $plugin->requires = 2024100700; // Moodle 4.5.
 $plugin->supported = [405, 502];
 $plugin->maturity = MATURITY_STABLE;
-$plugin->release = '3.0.0';
+$plugin->release = '3.0.1';

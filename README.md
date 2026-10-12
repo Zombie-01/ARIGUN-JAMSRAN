@@ -334,8 +334,10 @@ recorded no provenance, questions are identified by their current Moodle ID numb
 
 ## Privacy
 
-The plugin stores no personal data in Moodle. When the connector account calls `local_extsync_fetch_grades`, the following
-data is sent to the external system: Moodle user id; username, ID number and email where permitted; attempt finish
+The only personal data the plugin stores in Moodle is the user id of each web service account that called it
+(`local_extsync_integration`, system context). Deleting that account, or a privacy deletion request for it, removes the record; the activities and
+questions it created stay, but can no longer be changed or deleted through the web service. When the connector account
+calls `local_extsync_fetch_grades`, the following data is sent to the external system: Moodle user id; username, ID number and email where permitted; attempt finish
 time; attempt grade; per-question results. The plugin declares this in the Moodle Privacy API as an external
 location. Data received from the external system for synchronisation (student keys, lesson content) is used only to match users
 and create course content. Retention and processing in the external system are governed by your agreement with the external system.

@@ -32,6 +32,7 @@ use local_extsync\local\ownership;
  * @covers     \local_extsync\local\ownership
  * @covers     \local_extsync\external::push_lesson
  * @covers     \local_extsync\external::push_exam
+ * @covers     \local_extsync\observer
  */
 final class integration_ownership_test extends \advanced_testcase {
     /** @var \stdClass course both integrations work in */
@@ -365,5 +366,23 @@ final class integration_ownership_test extends \advanced_testcase {
             (int)reset($rows)->integrationid,
             'The original creator must remain the owner'
         );
+    }
+
+    /**
+     * Deleting a web service account deletes its integration and orphans what it owned.
+     */
+    public function test_deleting_account_deletes_integration(): void {
+        global $DB;
+
+        $this->resetAfterTest();
+        $account = $this->getDataGenerator()->create_user();
+        $integrationid = ownership::integration_for_user($account->id, true);
+        $DB->insert_record('local_extsync_module',
+            ['cmid' => 1, 'courseid' => 1, 'modname' => 'quiz', 'integrationid' => $integrationid]);
+
+        delete_user($account);
+
+        $this->assertFalse($DB->record_exists('local_extsync_integration', ['id' => $integrationid]));
+        $this->assertNull($DB->get_field('local_extsync_module', 'integrationid', ['cmid' => 1]));
     }
 }

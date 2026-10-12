@@ -72,6 +72,28 @@ class ownership {
     }
 
     /**
+     * Delete the integration of an account, when its user is deleted or asks for it.
+     *
+     * The modules and questions it created stay in their courses, but their owner becomes unknown
+     * (NULL), so no integration, including a new one for the same account, can change or delete them.
+     *
+     * @param int $userid the account
+     */
+    public static function delete_integration(int $userid): void {
+        global $DB;
+
+        $integrationid = self::integration_for_user($userid);
+        if ($integrationid <= 0) {
+            return;
+        }
+        $transaction = $DB->start_delegated_transaction();
+        $DB->set_field('local_extsync_module', 'integrationid', null, ['integrationid' => $integrationid]);
+        $DB->set_field('local_extsync_question', 'integrationid', null, ['integrationid' => $integrationid]);
+        $DB->delete_records('local_extsync_integration', ['id' => $integrationid]);
+        $transaction->allow_commit();
+    }
+
+    /**
      * Record a module created by the plugin, owned by the calling integration.
      *
      * @param int $courseid course id
